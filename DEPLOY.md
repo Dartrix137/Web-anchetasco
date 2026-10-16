@@ -163,27 +163,37 @@ Para volver a la última versión sin hacer push: `docker compose pull app && do
 
 Las imágenes de rollback quedan etiquetadas en el servidor y `docker image prune -f` no las borra. Para limpiarlas: `docker image prune -a -f` (borra todas las imágenes que no estén en uso; se pueden volver a descargar de GHCR).
 
-## 6. Activar el dominio y HTTPS
+## 6. Dominio anchetasco.com y HTTPS
 
-Cuando tengas el dominio:
+El dominio `anchetasco.com` (comprado en Bluehost, con los nameservers de Bluehost) ya está configurado en `deploy/Caddyfile`:
 
-1. **DNS** (en el panel donde compraste el dominio):
+- `https://anchetasco.com` → la web, con certificado de Let's Encrypt que Caddy obtiene y renueva solo.
+- `www.anchetasco.com` → redirige a `https://anchetasco.com`.
+- `http://50.6.206.188` (acceso por IP) → redirige a `https://anchetasco.com`.
 
-   | Tipo | Nombre | Valor |
-   |---|---|---|
-   | A | `@` | `50.6.206.188` |
-   | A | `www` | `50.6.206.188` |
+### DNS en Bluehost
 
-   Espera a que propague. Comprueba con `nslookup tudominio.com`: debe devolver `50.6.206.188`.
+En **Bluehost → Domains → anchetasco.com → DNS** (Zone Editor) deben existir:
 
-2. **Edita `deploy/Caddyfile` en el repo:**
-   - Comenta el bloque `:80 { ... }` (pon `#` al inicio de cada línea).
-   - Descomenta los bloques `tudominio.com` y `www.tudominio.com` y pon tu dominio real.
-   - Opcional: descomenta `email` en el bloque global para recibir avisos de Let's Encrypt.
+| Tipo | Host / Nombre | Apunta a | TTL |
+|---|---|---|---|
+| A | `@` | `50.6.206.188` | el mínimo disponible (p. ej. 1 hora o menos) |
+| A | `www` | `50.6.206.188` | igual |
 
-3. **Commit + push.** El workflow copia el Caddyfile y recarga Caddy, que obtiene el certificado de Let's Encrypt solo, en segundos, y lo renueva automáticamente. HTTP redirige a HTTPS.
+- Si ya hay un registro A para `@` o `www` apuntando a otra IP (hosting compartido o "parking" de Bluehost), **edítalo**; no dejes dos registros A con IPs distintas.
+- Si `www` existe como **CNAME** a `anchetasco.com`, también sirve; puedes dejarlo.
+- **No crees registros AAAA** (IPv6) salvo que el VPS tenga IPv6 configurado: Let's Encrypt los prefiere y la validación fallaría.
+- No toques los registros MX/TXT si usas correo con el dominio.
 
-4. Si falla, revisa `docker compose logs caddy`. Las causas típicas son DNS que todavía no apunta a la IP, o los puertos 80/443 cerrados (ya están abiertos en ufw).
+Comprueba la propagación desde tu PC: `nslookup anchetasco.com 8.8.8.8` debe devolver `50.6.206.188`.
+
+### Si el certificado no se emite
+
+`docker compose logs caddy | grep -i -E "error|certificate|acme"`. Causas típicas: el DNS aún no apunta al VPS, hay un AAAA que apunta a otro lado, o los puertos 80/443 están cerrados (ufw ya los permite). Caddy reintenta solo; cuando el DNS esté bien, emite el certificado sin hacer nada más.
+
+### Cambiar de dominio o añadir otro
+
+Edita los bloques del dominio en `deploy/Caddyfile`, haz commit y push. El workflow copia el archivo y recarga Caddy.
 
 > Los certificados se guardan en el volumen `anchetasco_caddy_data`. No lo borres (`docker compose down -v` lo borraría): Let's Encrypt limita cuántos certificados se pueden emitir por semana.
 

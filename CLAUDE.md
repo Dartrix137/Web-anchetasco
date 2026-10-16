@@ -130,7 +130,7 @@ Guía paso a paso para el operador: **`DEPLOY.md`**. Resumen técnico:
 | `Dockerfile` | Multi-stage, todo Alpine: `oven/bun` aporta el binario de bun → `bun install --frozen-lockfile` → `bun run build` en `node:24-alpine` → imagen final `node:24-alpine` con solo `.next/standalone`, usuario `node` (no root), `node server.js` en `0.0.0.0:3000`. |
 | `.dockerignore` | Excluye `.git`, `node_modules`, `.next`, `.env*`, bases locales, `deploy/`, `docs/`, `*.md`, `upload/`. |
 | `deploy/docker-compose.yml` | Proyecto `anchetasco`: `app` (imagen GHCR, solo `expose: 3000` en la red `web`, `mem_limit 512m`, `NODE_OPTIONS=--max-old-space-size=320`, healthcheck `wget` a `/api`) y `caddy` (`caddy:2`, **único con `ports:`** 80/443/443-udp, `mem_limit 256m`, volúmenes `caddy_data`/`caddy_config`). `restart: unless-stopped` en ambos. |
-| `deploy/Caddyfile` | Snippet `(comun)`: `encode zstd gzip`, cabeceras de seguridad, `reverse_proxy app:3000`. Hoy sirve por IP en `:80`; el bloque del dominio (con HSTS y redirección de `www`) está comentado con instrucciones. |
+| `deploy/Caddyfile` | Snippet `(comun)`: `encode zstd gzip`, cabeceras de seguridad, `reverse_proxy app:3000`. Sitio `anchetasco.com` con HTTPS automático (Let's Encrypt) y HSTS; `www` y el acceso por IP (`:80`) redirigen a `https://anchetasco.com`. |
 | `deploy/.env.example` | Solo `APP_IMAGE`. La app no necesita secretos. |
 | `.github/workflows/deploy.yml` | Job `build` (buildx, caché `type=gha`, `linux/amd64`, `GITHUB_TOKEN` para GHCR) y job `deploy` (`ssh`/`scp` nativos con `ssh-keyscan`; sin acciones de terceros para SSH). Secrets: `SSH_HOST`, `SSH_PORT`, `SSH_USER`, `SSH_KEY`. |
 
@@ -143,4 +143,4 @@ Decisiones y reglas:
 - `deploy/docker-compose.yml` y `deploy/Caddyfile` se sobrescriben en cada despliegue: se editan en el repo, nunca en el servidor. El `.env` del servidor no lo toca el workflow.
 - Sin estado y sin base de datos: no hay migraciones ni backups de datos. El único volumen importante es `caddy_data` (certificados de Let's Encrypt).
 - `sharp` requiere que dependencias e imagen final compartan libc (Alpine/musl en todas las etapas) y arquitectura (`linux/amd64`, como el VPS).
-- Pendiente: el dominio. Para activarlo, registros A → `50.6.206.188`, comentar `:80` y descomentar el bloque del dominio en `deploy/Caddyfile`.
+- Dominio: `anchetasco.com` (Bluehost, nameservers de Bluehost), registros A de `@` y `www` → `50.6.206.188`. Sin AAAA.
