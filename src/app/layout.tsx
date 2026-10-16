@@ -26,8 +26,13 @@ export const metadata: Metadata = {
     "anchetas Cali",
     "Nativity World",
   ],
+  // Favicons generados desde public/fav2.png
   icons: {
-    icon: "/logo_amp_sq.png",
+    icon: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: { url: "/apple-touch-icon.png", sizes: "180x180" },
   },
   openGraph: {
     title: "Ancheta & Co. | Detalles Corporativos Navidad 2026",

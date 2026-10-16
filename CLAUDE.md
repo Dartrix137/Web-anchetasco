@@ -58,6 +58,10 @@ Al reemplazar una imagen en `public/` manteniendo el mismo nombre, borrar `.next
 
 Los textos, precios, teléfonos, número de WhatsApp y productos se cambian en `src/lib/catalog-data.ts`. El mensaje de WhatsApp se arma en `buildWhatsAppMessage` dentro de `src/components/landing/quote-form.tsx`.
 
+Logo y favicon:
+- `public/logo_brand.png` (3651×1545, ≈2,36:1) es el logo de Ancheta & Co. en el header (caja 132×56). En el footer, el recuadro de logos corporativos muestra `public/brands/Logo-Nativity-World.webp` (252×75, caja 148×44) y `public/brands/Pesebre-logo.webp`. Si cambia la proporción de un logo, ajustar su caja para que la imagen la llene (usan `fill` + `object-contain`).
+- Favicons generados con sharp desde `public/fav2.png` (fuente 1210×1210), recortados al anillo verde: `favicon-32x32.png` y `favicon-192x192.png` (círculo con esquinas transparentes) y `apple-touch-icon.png` (180×180, fondo blanco). Declarados en `metadata.icons` de `src/app/layout.tsx`. Si cambia el favicon, regenerar los tres.
+
 ## Comandos
 
 ```bash
@@ -115,15 +119,28 @@ No hay. La versión generada por z.ai guardaba cada cotización en SQLite (Prism
 
 ## Despliegue
 
-Destino: **VPS Ubuntu 26.04, 1 vCPU, 2 GB RAM + 2 GB swap**, con **Docker + Docker Compose**, **Caddy** como reverse proxy con HTTPS automático, y **despliegue automático con GitHub Actions**: la imagen se construye en GitHub, se sube a **GHCR** y el servidor solo hace `docker compose pull && docker compose up -d`. El SSH del servidor usa el **puerto 2222**.
+Guía paso a paso para el operador: **`DEPLOY.md`**. Resumen técnico:
 
-Reglas por los recursos limitados:
+**Servidor:** VPS Bluehost, Ubuntu 26.04, 1 vCPU, 2 GB RAM + 2 GB swap, IP `50.6.206.188`. Usuario `deploy` (grupo docker), SSH solo con llave en el **puerto 2222** (el 22 queda para la consola web de Bluehost). ufw: 22, 2222, 80, 443. App en `/home/deploy/app` (`docker-compose.yml`, `Caddyfile`, `.env`).
 
-- **Nunca hacer `bun install` ni `next build` en el servidor**: 1 vCPU y 2 GB no bastan con holgura. Todo el build ocurre en GitHub Actions.
-- Imagen liviana con **multi-stage**: etapa de build (bun) que ejecuta `bun install --frozen-lockfile` + `bun run build`; etapa final con una base mínima de Node (p. ej. `node:22-alpine` o `node:22-slim`) que copia **solo** `.next/standalone` (~99 MB, ya incluye `.next/static` y `public` gracias al script `build`) y arranca con `node server.js` como usuario no root. Usar `.dockerignore` para no enviar `node_modules`, `.next`, `upload/`, `docs/`, `.git`.
-- `sharp` (optimizador de imágenes) tiene binarios nativos: instalar dependencias en una etapa con el mismo SO/libc que la imagen final (Alpine ↔ Alpine, Debian ↔ Debian) y construir para la arquitectura del VPS (normalmente `linux/amd64`).
-- La app es **sin estado**: no necesita volúmenes ni base de datos; se puede reemplazar el contenedor libremente.
-- Variables: `NODE_ENV=production`, `PORT=3000`, `HOSTNAME=0.0.0.0`, opcional `NEXT_TELEMETRY_DISABLED=1`.
-- **Caddy**: crear un `Caddyfile` de producción (`dominio { reverse_proxy app:3000 }`), con Caddy en el mismo `docker-compose.yml` y volúmenes para `/data` y `/config` (certificados). Solo Caddy publica puertos (80/443); el contenedor de la app no expone puertos al host.
-- **GitHub Actions**: job de build+push a `ghcr.io/<owner>/<repo>` (con cache de capas) y job de deploy por SSH (`-p 2222`) que ejecuta `docker compose pull && docker compose up -d && docker image prune -f`. Secretos: host, usuario, llave SSH, y un token con `read:packages` en el servidor si el paquete GHCR es privado.
-- Limitar memoria del contenedor de Node (p. ej. `mem_limit` ~512 MB) para dejar margen al sistema y a Caddy.
+**Flujo:** push a `main` (o `workflow_dispatch`) → `.github/workflows/deploy.yml` construye la imagen en GitHub → la sube a `ghcr.io/dartrix137/web-anchetasco` con tags `latest` y SHA corto (7 caracteres) → por SSH copia `deploy/docker-compose.yml` y `deploy/Caddyfile` al servidor → `docker compose pull && up -d --remove-orphans` → recarga Caddy → `docker image prune -f`. Los despliegues están serializados (`concurrency`).
+
+| Archivo | Qué hace |
+|---|---|
+| `Dockerfile` | Multi-stage, todo Alpine: `oven/bun` aporta el binario de bun → `bun install --frozen-lockfile` → `bun run build` en `node:24-alpine` → imagen final `node:24-alpine` con solo `.next/standalone`, usuario `node` (no root), `node server.js` en `0.0.0.0:3000`. |
+| `.dockerignore` | Excluye `.git`, `node_modules`, `.next`, `.env*`, bases locales, `deploy/`, `docs/`, `*.md`, `upload/`. |
+| `deploy/docker-compose.yml` | Proyecto `anchetasco`: `app` (imagen GHCR, solo `expose: 3000` en la red `web`, `mem_limit 512m`, `NODE_OPTIONS=--max-old-space-size=320`, healthcheck `wget` a `/api`) y `caddy` (`caddy:2`, **único con `ports:`** 80/443/443-udp, `mem_limit 256m`, volúmenes `caddy_data`/`caddy_config`). `restart: unless-stopped` en ambos. |
+| `deploy/Caddyfile` | Snippet `(comun)`: `encode zstd gzip`, cabeceras de seguridad, `reverse_proxy app:3000`. Hoy sirve por IP en `:80`; el bloque del dominio (con HSTS y redirección de `www`) está comentado con instrucciones. |
+| `deploy/.env.example` | Solo `APP_IMAGE`. La app no necesita secretos. |
+| `.github/workflows/deploy.yml` | Job `build` (buildx, caché `type=gha`, `linux/amd64`, `GITHUB_TOKEN` para GHCR) y job `deploy` (`ssh`/`scp` nativos con `ssh-keyscan`; sin acciones de terceros para SSH). Secrets: `SSH_HOST`, `SSH_PORT`, `SSH_USER`, `SSH_KEY`. |
+
+Decisiones y reglas:
+
+- **Nunca hacer `bun install` ni `next build` en el servidor**: no hay RAM suficiente. Todo el build ocurre en GitHub Actions.
+- **Docker se salta ufw**: ningún servicio salvo Caddy puede usar `ports:`. Si se añade otro servicio (p. ej. una base de datos), usar solo `expose:`/red interna.
+- `next.config.ts` tiene `compress: false`: la compresión la hace Caddy (zstd/gzip) y Node no gasta CPU en ella.
+- El servidor siempre despliega `latest`. Así la imagen anterior queda sin tag y `docker image prune -f` la borra. Rollback temporal: `APP_TAG=<sha> docker compose pull app && APP_TAG=<sha> docker compose up -d app`. El siguiente push vuelve a `latest`.
+- `deploy/docker-compose.yml` y `deploy/Caddyfile` se sobrescriben en cada despliegue: se editan en el repo, nunca en el servidor. El `.env` del servidor no lo toca el workflow.
+- Sin estado y sin base de datos: no hay migraciones ni backups de datos. El único volumen importante es `caddy_data` (certificados de Let's Encrypt).
+- `sharp` requiere que dependencias e imagen final compartan libc (Alpine/musl en todas las etapas) y arquitectura (`linux/amd64`, como el VPS).
+- Pendiente: el dominio. Para activarlo, registros A → `50.6.206.188`, comentar `:80` y descomentar el bloque del dominio en `deploy/Caddyfile`.

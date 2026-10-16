@@ -1,0 +1,47 @@
+# Caddyfile de producción: /home/deploy/app/Caddyfile
+# Se copia desde el repo (deploy/Caddyfile) en cada despliegue: edítalo aquí,
+# no en el servidor. Tras el despliegue, GitHub Actions recarga Caddy.
+{
+	# Correo para avisos de Let's Encrypt (opcional, recomendado al activar el dominio)
+	# email tu-correo@ejemplo.com
+}
+
+# Opciones comunes a todos los sitios
+(comun) {
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+		-Server
+		-X-Powered-By
+	}
+
+	reverse_proxy app:3000
+}
+
+# ---------------------------------------------------------------------------
+# AHORA (sin dominio): la web responde por IP en HTTP -> http://50.6.206.188
+# ---------------------------------------------------------------------------
+:80 {
+	import comun
+}
+
+# ---------------------------------------------------------------------------
+# CUANDO TENGAS DOMINIO (ver DEPLOY.md, sección "Activar dominio y HTTPS"):
+#   1. Crea los registros DNS A de `tudominio.com` y `www.tudominio.com` -> 50.6.206.188
+#   2. Comenta (con #) el bloque `:80 { ... }` de arriba.
+#   3. Descomenta los dos bloques de abajo y cambia tudominio.com por el real.
+#   4. git commit + push: GitHub Actions copia este archivo y recarga Caddy.
+# Caddy obtiene y renueva el certificado HTTPS solo, y redirige HTTP -> HTTPS.
+# ---------------------------------------------------------------------------
+# tudominio.com {
+# 	import comun
+# 	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+# }
+#
+# www.tudominio.com {
+# 	redir https://tudominio.com{uri} permanent
+# }

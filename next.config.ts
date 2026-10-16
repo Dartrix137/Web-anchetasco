@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  // En producción comprime Caddy (zstd/gzip); así Node no gasta CPU en ello
+  compress: false,
   // Oculta el botón flotante de dev tools (abajo-izquierda) para no tapar
   // el botón flotante de la campaña de personalización en el preview
   devIndicators: false,

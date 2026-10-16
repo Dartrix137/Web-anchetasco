@@ -37,13 +37,14 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <a href="#inicio" className="flex items-center" aria-label="Ancheta & Co. - Inicio">
-          <span className="relative h-11 w-[225px] shrink-0">
+          {/* Caja con la proporción del logo (3651×1545 ≈ 2,36:1) */}
+          <span className="relative h-14 w-[132px] shrink-0">
             <Image
               src="/logo_brand.png"
               alt="Ancheta & Co. — Detalles Corporativos"
               fill
               priority
-              sizes="225px"
+              sizes="132px"
               className="object-contain"
             />
           </span>

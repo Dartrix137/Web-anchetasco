@@ -32,19 +32,21 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-cream/65">
-              {COMPANY.legalName} — {COMPANY.slogan}. Transformamos el detalle navideño en una
-              experiencia útil, elegante y memorable: un regalo que no termina en diciembre.
+              {COMPANY.legalName} — {COMPANY.slogan}. Transformamos el detalle
+              navideño en una experiencia útil, elegante y memorable: un regalo
+              que no termina en diciembre.
             </p>
 
             {/* Logos corporativos */}
             <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-4">
               <span className="flex h-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-cream/15 bg-cream/5 px-3">
-                <span className="relative h-10 w-[204px]">
+                {/* Caja con la proporción del logo (252×75 ≈ 3,36:1) */}
+                <span className="relative h-11 w-[148px]">
                   <Image
-                    src="/logo_brand.png"
+                    src="/brands/Logo-Nativity-World.webp"
                     alt="Logo corporativo Nativity World S.A.S."
                     fill
-                    sizes="204px"
+                    sizes="148px"
                     className="object-contain"
                   />
                 </span>
@@ -58,7 +60,7 @@ export function SiteFooter() {
               >
                 <span className="flex h-10 w-10 items-center justify-center overflow-hidden">
                   <Image
-                    src="/brands/pesebre-logo.png"
+                    src="/brands/Pesebre-logo.webp"
                     alt="Logo El Pesebre Más Grande del Mundo"
                     width={40}
                     height={40}
@@ -83,7 +85,9 @@ export function SiteFooter() {
 
           {/* Navegación */}
           <nav aria-label="Navegación del pie de página">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-gold">Explora</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-gold">
+              Explora
+            </h3>
             <ul className="mt-4 space-y-2.5">
               {FOOTER_LINKS.map((link) => (
                 <li key={link.href}>
@@ -100,7 +104,9 @@ export function SiteFooter() {
 
           {/* Contacto */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-gold">Contacto</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-gold">
+              Contacto
+            </h3>
             <ul className="mt-4 space-y-2.5 text-sm text-cream/70">
               <li>Of. Principal: Av 6A Bis #35N-100, Of. 413</li>
               <li>Chipichape, Cali — Valle</li>

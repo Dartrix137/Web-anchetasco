@@ -1,0 +1,58 @@
+# Producción en el VPS: /home/deploy/app/docker-compose.yml
+# GitHub Actions copia este archivo y el Caddyfile en cada despliegue; los
+# cambios hechos a mano en el servidor se sobrescriben (edítalos en el repo).
+#
+# IMPORTANTE: Docker se salta las reglas de ufw. Solo Caddy publica puertos
+# ("ports:"); la app solo se expone dentro de la red interna ("expose:").
+
+name: anchetasco
+
+services:
+  app:
+    # APP_IMAGE viene de /home/deploy/app/.env (ver .env.example).
+    # APP_TAG solo se usa para volver a una versión anterior:
+    #   APP_TAG=<sha> docker compose up -d app
+    image: ${APP_IMAGE:-ghcr.io/dartrix137/web-anchetasco}:${APP_TAG:-latest}
+    restart: unless-stopped
+    # La app no necesita variables propias. Si algún día las necesita, añadir:
+    #   env_file: .env
+    environment:
+      NODE_ENV: production
+      # Heap de V8 por debajo del límite del contenedor
+      NODE_OPTIONS: --max-old-space-size=320
+    expose:
+      - "3000"
+    networks:
+      - web
+    mem_limit: 512m
+    healthcheck:
+      # /api responde {"message":"Hello, world!"}; wget viene en Alpine (busybox)
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/api"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data     # certificados de Let's Encrypt (no borrar)
+      - caddy_config:/config
+    networks:
+      - web
+    depends_on:
+      - app
+    mem_limit: 256m
+
+networks:
+  web:
+
+volumes:
+  caddy_data:
+  caddy_config:

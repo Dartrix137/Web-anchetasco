@@ -1,0 +1,47 @@
+# Control de versiones y CI
+.git
+.gitignore
+.github
+
+# Dependencias y builds (se generan dentro de la imagen)
+node_modules
+.next
+out
+build
+dist
+coverage
+*.tsbuildinfo
+next-env.d.ts
+
+# Variables de entorno y secretos
+.env
+.env.*
+*.pem
+*.key
+
+# Bases de datos locales
+db
+*.db
+*.db-journal
+*.sqlite
+
+# Archivos de despliegue y documentación (no se necesitan dentro de la imagen)
+deploy
+Dockerfile
+.dockerignore
+docs
+*.md
+
+# Material original de z.ai y restos locales (la app usa public/)
+upload
+tool-results
+__pycache__
+*.pyc
+
+# Logs y archivos de sistema/editor
+*.log
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+.claude
