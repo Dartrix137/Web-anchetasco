@@ -15,7 +15,11 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
+const SITE_URL = "https://anchetasco.com";
+
 export const metadata: Metadata = {
+  // Base para convertir en absolutas las URLs de Open Graph, canonical, etc.
+  metadataBase: new URL(SITE_URL),
   title: "Ancheta & Co. | Detalles Corporativos Navidad 2026",
   description:
     "Regala una ancheta que perdure. Anchetas navideñas corporativas en maletín funcional y elegante para tu equipo y clientes. Cali, Colombia.",
@@ -34,11 +38,32 @@ export const metadata: Metadata = {
     ],
     apple: { url: "/apple-touch-icon.png", sizes: "180x180" },
   },
+  alternates: {
+    canonical: "/",
+  },
+  // Vista previa al compartir el enlace (WhatsApp, Facebook, LinkedIn…).
+  // public/og-image.jpg: 1200×630, generada desde hero.png + logo_brand.png
   openGraph: {
     title: "Ancheta & Co. | Detalles Corporativos Navidad 2026",
     description: "Regala una ancheta que perdure. Encuentra el detalle para tu equipo y clientes.",
+    url: "/",
     siteName: "Ancheta & Co.",
+    locale: "es_CO",
     type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Ancheta & Co. — anchetas navideñas corporativas en maletines reutilizables",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ancheta & Co. | Detalles Corporativos Navidad 2026",
+    description: "Regala una ancheta que perdure. Encuentra el detalle para tu equipo y clientes.",
+    images: ["/og-image.jpg"],
   },
 };
 

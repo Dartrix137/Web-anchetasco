@@ -39,6 +39,7 @@ src/
     page.tsx             # Compone la landing con las secciones de components/landing
     globals.css          # Tailwind 4 + tokens de color (forest, gold, cream…) y tema shadcn
     api/route.ts         # GET /api -> {"message":"Hello, world!"} (plantilla; útil como healthcheck)
+    sitemap.ts           # /sitemap.xml (una sola URL: https://anchetasco.com/)
   components/
     landing/             # Secciones de la landing (una por archivo, kebab-case)
     ui/                  # Componentes shadcn/ui generados (no editar salvo necesidad)
@@ -61,6 +62,11 @@ Los textos, precios, teléfonos, número de WhatsApp y productos se cambian en `
 Logo y favicon:
 - `public/logo_brand.png` (3651×1545, ≈2,36:1) es el logo de Ancheta & Co. en el header (caja 132×56). En el footer, el recuadro de logos corporativos muestra `public/brands/Logo-Nativity-World.webp` (252×75, caja 148×44) y `public/brands/Pesebre-logo.webp`. Si cambia la proporción de un logo, ajustar su caja para que la imagen la llene (usan `fill` + `object-contain`).
 - Favicons generados con sharp desde `public/fav2.png` (fuente 1210×1210), recortados al anillo verde: `favicon-32x32.png` y `favicon-192x192.png` (círculo con esquinas transparentes) y `apple-touch-icon.png` (180×180, fondo blanco). Declarados en `metadata.icons` de `src/app/layout.tsx`. Si cambia el favicon, regenerar los tres.
+
+SEO (`metadata` en `src/app/layout.tsx`):
+- `metadataBase` = `https://anchetasco.com` (convierte en absolutas las URLs de canonical y Open Graph) y `alternates.canonical: "/"`.
+- Vista previa al compartir (Open Graph + Twitter `summary_large_image`): `public/og-image.jpg`, 1200×630, ~100 KB (WhatsApp ignora imágenes muy pesadas). Se generó con sharp a partir de `hero.png` con `logo_brand.png` encima a la izquierda; si cambian el hero o el logo, regenerarla.
+- `public/robots.txt` permite todo y apunta a `/sitemap.xml` (generado por `src/app/sitemap.ts`). No crear `src/app/robots.ts` mientras exista `public/robots.txt` (Next da conflicto).
 
 ## Comandos
 

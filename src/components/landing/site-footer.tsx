@@ -126,7 +126,7 @@ export function SiteFooter() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-cream/10 pt-6 sm:flex-row">
           <p className="text-xs text-cream/50">
-            © 2026 Anchetas &amp; Co. Todos los derechos reservados.
+            © 2026 Ancheta &amp; Co. Todos los derechos reservados.
           </p>
           <p className="flex items-center gap-1.5 text-xs text-cream/50">
             Diseño y Desarrollo por{" "}
