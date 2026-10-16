@@ -161,7 +161,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                 />
               </motion.div>
               {product.specialOrder && (
-                <span className="absolute left-4 top-4 rounded-full bg-forest/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-gold backdrop-blur-sm">
+                <span className="absolute left-4 top-4 rounded-full bg-holly/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-cream backdrop-blur-sm">
                   Sobre pedido
                 </span>
               )}

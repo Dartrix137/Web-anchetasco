@@ -77,7 +77,7 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
             Ver detalle
           </span>
           {product.specialOrder && (
-            <span className="absolute left-3 top-3 rounded-full bg-forest/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-gold backdrop-blur-sm">
+            <span className="absolute left-3 top-3 rounded-full bg-holly/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-cream backdrop-blur-sm">
               Sobre pedido
             </span>
           )}

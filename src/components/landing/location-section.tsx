@@ -159,10 +159,11 @@ export function LocationSection() {
               <ul className="mt-4 space-y-3">
                 {COMPANY.contacts.map((contact) => (
                   <li key={contact.name} className="flex items-center justify-between gap-3">
-                    <span className="text-sm font-medium text-cream/90">{contact.name}</span>
+                    {/* El nombre cede espacio; el teléfono nunca se parte en dos líneas */}
+                    <span className="min-w-0 text-sm font-medium text-cream/90">{contact.name}</span>
                     <a
                       href={`tel:${contact.phone.replace(/\s/g, "")}`}
-                      className="rounded-full border border-gold/40 bg-forest-deep/60 px-3 py-1 text-xs font-semibold text-gold transition-colors hover:bg-gold hover:text-forest-deep"
+                      className="shrink-0 whitespace-nowrap rounded-full border border-gold/40 bg-forest-deep/60 px-3 py-1 text-xs font-semibold text-gold transition-colors hover:bg-gold hover:text-forest-deep"
                     >
                       {contact.phone}
                     </a>
