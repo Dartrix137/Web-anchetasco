@@ -14,9 +14,11 @@ import {
   Ruler,
   ShoppingBag,
   Trash2,
+  X,
 } from "lucide-react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -140,7 +142,19 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
 
   return (
     <Dialog open={!!product} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-h-[92vh] max-w-4xl overflow-y-auto rounded-2xl p-0 sm:max-w-4xl">
+      <DialogContent
+        showCloseButton={false}
+        className="max-h-[92vh] max-w-4xl gap-0 overflow-y-auto rounded-2xl p-0 sm:max-w-4xl"
+      >
+        {/* Botón de cerrar fijo (sticky): sigue visible al hacer scroll y contrasta sobre la foto */}
+        <div className="sticky top-0 z-20 flex h-0 justify-end">
+          <DialogClose
+            className="mr-3 mt-3 flex h-11 w-11 items-center justify-center rounded-full border border-forest/10 bg-white/95 text-forest shadow-lg backdrop-blur-sm transition-colors hover:bg-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold md:h-10 md:w-10"
+            aria-label="Cerrar"
+          >
+            <X className="h-6 w-6" strokeWidth={2.5} aria-hidden />
+          </DialogClose>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Galería de imágenes (2-4 fotos) */}
           <div className="flex flex-col bg-cream">

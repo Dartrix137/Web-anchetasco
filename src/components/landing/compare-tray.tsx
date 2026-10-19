@@ -5,6 +5,7 @@ import Image from "next/image";
 import { GitCompareArrows, X } from "lucide-react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -78,8 +79,18 @@ export function CompareTray() {
 
       {/* Modal comparador */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[92vh] max-w-5xl overflow-hidden rounded-2xl p-0">
-          <DialogHeader className="p-6 pb-4 text-left sm:p-8 sm:pb-4">
+        <DialogContent
+          showCloseButton={false}
+          className="max-h-[92vh] max-w-5xl overflow-hidden rounded-2xl p-0"
+        >
+          {/* Botón de cerrar grande y con contraste (el de shadcn casi no se ve en móvil) */}
+          <DialogClose
+            className="absolute right-3 top-3 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-forest/10 bg-white/95 text-forest shadow-lg backdrop-blur-sm transition-colors hover:bg-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold md:h-10 md:w-10"
+            aria-label="Cerrar"
+          >
+            <X className="h-6 w-6" strokeWidth={2.5} aria-hidden />
+          </DialogClose>
+          <DialogHeader className="p-6 pb-4 pr-16 text-left sm:p-8 sm:pb-4 sm:pr-16">
             <DialogTitle className="font-display text-2xl font-bold text-forest sm:text-3xl">
               Comparar productos
             </DialogTitle>
