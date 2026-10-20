@@ -32,7 +32,7 @@ const OPTIONS = [
 
 export function WhatNext() {
   return (
-    <section id="que-quieres" className="relative scroll-mt-20 bg-cream py-16 pattern-snow sm:py-20">
+    <section id="que-quieres" className="relative scroll-mt-20 bg-cream pt-16 pb-12 pattern-snow sm:pt-20 sm:pb-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
