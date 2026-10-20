@@ -25,7 +25,7 @@ export function Catalog() {
   }, [priceRange]);
 
   return (
-    <section id="catalogo" className="relative scroll-mt-[-1rem] bg-cream pt-6 pb-20 pattern-snow sm:pt-8 sm:pb-24">
+    <section id="catalogo" className="relative -scroll-mt-8 bg-cream pt-12 pb-20 pattern-snow sm:-scroll-mt-4 sm:pt-8 sm:pb-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Encabezado */}
         <motion.div
