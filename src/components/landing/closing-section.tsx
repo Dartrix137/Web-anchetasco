@@ -67,7 +67,7 @@ export function ClosingSection() {
     <section
       id="por-que-nosotros"
       aria-label="Por qué comprar con nosotros"
-      className="relative bg-forest-deep py-20 pattern-stars sm:py-24"
+      className="relative -scroll-mt-16 bg-forest-deep py-20 pattern-stars sm:-scroll-mt-20 sm:py-24"
     >
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Encabezado */}

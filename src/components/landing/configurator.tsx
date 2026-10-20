@@ -96,7 +96,7 @@ export function Configurator() {
   };
 
   return (
-    <section id="configurador" className="relative scroll-mt-20 bg-forest py-20 sm:py-24">
+    <section id="configurador" className="relative -scroll-mt-16 sm:-scroll-mt-20 bg-forest py-20 sm:py-24">
       {/* Textura sutil */}
       <div className="pointer-events-none absolute inset-0 opacity-40" aria-hidden>
         <div className="absolute inset-0 bg-gradient-to-b from-forest-deep via-transparent to-forest-deep" />
@@ -127,7 +127,7 @@ export function Configurator() {
           {/* ---------- Columna izquierda: pasos ---------- */}
           <div>
             {/* Paso 1: contenido */}
-            <div ref={packsRef} className="scroll-mt-28">
+            <div ref={packsRef} className="scroll-mt-4">
               <div className="flex items-center gap-3.5">
                 <span
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold font-display text-lg font-bold text-forest-deep shadow-lg shadow-gold/20"
@@ -186,7 +186,7 @@ export function Configurator() {
             {/* Paso 2: empaque */}
             <div
               ref={formatSectionRef}
-              className="mt-12 scroll-mt-24"
+              className="mt-12 scroll-mt-4"
               id="combo-formatos"
               aria-label="Selecciona el empaque"
             >
@@ -221,7 +221,7 @@ export function Configurator() {
           </div>
 
           {/* ---------- Columna derecha: resumen sticky ---------- */}
-          <aside ref={panelRef} className="scroll-mt-24 lg:sticky lg:top-24 lg:self-start">
+          <aside ref={panelRef} className="scroll-mt-4 lg:sticky lg:top-24 lg:self-start">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
