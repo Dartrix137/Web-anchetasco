@@ -1,6 +1,5 @@
 import { SiteHeader } from "@/components/landing/site-header";
 import { Hero } from "@/components/landing/hero";
-import { NationalStrip } from "@/components/landing/national-strip";
 import { WhatNext } from "@/components/landing/what-next";
 import { Catalog } from "@/components/landing/catalog";
 import { Configurator } from "@/components/landing/configurator";
@@ -20,7 +19,6 @@ export default function Home() {
       <SiteHeader />
       <main className="flex-1">
         <Hero />
-        <NationalStrip />
         <WhatNext />
         <Catalog />
         <Configurator />

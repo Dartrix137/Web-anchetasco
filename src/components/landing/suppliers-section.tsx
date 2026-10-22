@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
 import { Handshake } from "lucide-react";
 
@@ -16,6 +18,58 @@ const SUPPLIERS = [
   { name: "Heineken", image: "/brands/heineken.png" },
   { name: "Piazza", image: "/brands/piazza.png" },
 ];
+
+const AUTOPLAY_MS = 2500;
+
+/** Carrusel de marcas solo para móvil: avanza solo y se puede deslizar con el dedo */
+function SuppliersCarousel() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let timer: ReturnType<typeof setInterval> | null = null;
+    const start = () => {
+      if (timer) clearInterval(timer);
+      timer = setInterval(() => emblaApi.scrollNext(), AUTOPLAY_MS);
+    };
+    const stop = () => {
+      if (timer) clearInterval(timer);
+      timer = null;
+    };
+    // Se pausa mientras el usuario arrastra y retoma al soltar
+    emblaApi.on("pointerDown", stop);
+    emblaApi.on("pointerUp", start);
+    start();
+    return () => {
+      stop();
+      emblaApi.off("pointerDown", stop);
+      emblaApi.off("pointerUp", start);
+    };
+  }, [emblaApi]);
+
+  return (
+    <div className="overflow-hidden" ref={emblaRef}>
+      <div className="-ml-3 flex">
+        {SUPPLIERS.map((supplier) => (
+          <figure key={supplier.name} className="min-w-0 flex-[0_0_33.333%] pl-3">
+            <div className="flex items-center justify-center rounded-2xl border border-forest/10 bg-cream/50 p-3">
+              <Image
+                src={supplier.image}
+                alt={`Logo de ${supplier.name}`}
+                width={480}
+                height={480}
+                className="h-14 w-14 object-contain opacity-75 grayscale"
+                sizes="30vw"
+              />
+            </div>
+            <span className="sr-only">{supplier.name}</span>
+          </figure>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function SuppliersSection() {
   return (
@@ -47,7 +101,17 @@ export function SuppliersSection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.8, delay: 0.15 }}
-          className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5"
+          className="mt-8 sm:hidden"
+        >
+          <SuppliersCarousel />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.8, delay: 0.15 }}
+          className="mt-10 hidden grid-cols-2 gap-4 sm:grid sm:grid-cols-3 lg:grid-cols-5"
         >
           {SUPPLIERS.map((supplier) => (
             <figure

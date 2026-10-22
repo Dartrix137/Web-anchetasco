@@ -502,6 +502,8 @@ export const COMPANY = {
   pesebreSite: "https://elpesebremasgrandedelmundo.com",
   // Ubicación exacta en Google Maps (Punto de Venta — Av 6 N # 28N-39, San Vicente, Cali)
   mapsUrl: "https://maps.app.goo.gl/tYUXSX4v6tC87YjE7",
+  // Mapa interactivo embebido (mismo punto; no requiere clave de API)
+  mapsEmbedUrl: "https://www.google.com/maps?q=3.4697591,-76.5282338&z=17&hl=es&output=embed",
   // Proveedores y aliados comerciales (sección de logos)
   suppliers: [
     "Colombina",

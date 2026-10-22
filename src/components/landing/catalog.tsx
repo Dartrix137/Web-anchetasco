@@ -25,7 +25,7 @@ export function Catalog() {
   }, [priceRange]);
 
   return (
-    <section id="catalogo" className="relative -scroll-mt-8 bg-cream pt-12 pb-20 pattern-snow sm:-scroll-mt-4 sm:pt-8 sm:pb-24">
+    <section id="catalogo" className="relative -scroll-mt-8 bg-cream pt-8 pb-20 pattern-snow sm:-scroll-mt-4 sm:pt-8 sm:pb-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Encabezado */}
         <motion.div
@@ -38,17 +38,17 @@ export function Catalog() {
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-gold-deep">
             Catálogo
           </span>
-          <h2 className="mt-3 font-display text-3xl font-bold text-forest sm:text-4xl">
+          <h2 className="mt-2 font-display text-3xl font-bold text-forest sm:text-4xl">
             Descubre nuestras opciones
           </h2>
-          <p className="mt-4 text-base text-muted-foreground">
+          <p className="mt-2 text-base text-muted-foreground">
             Combos navideños listos para entregar. Si no sabes cuál elegir, filtra por el
             presupuesto que tienes asignado por regalo.
           </p>
         </motion.div>
 
         {/* Barra de filtros */}
-        <div className="mt-10 flex flex-col gap-4 rounded-2xl border border-forest/10 bg-white/70 p-4 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-forest/10 bg-white/70 p-4 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
           <p className="text-sm font-semibold text-forest/70" aria-live="polite">
             Mostrando{" "}
             <span className="font-bold text-forest">
@@ -59,12 +59,12 @@ export function Catalog() {
           <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3">
             <span className="flex items-center gap-1.5 text-sm font-bold text-forest">
               <Sparkles className="h-4 w-4 shrink-0 text-gold-deep" aria-hidden />
-              ¿No sabes cuál elegir?
+              Filtrar por precio
             </span>
             <Select value={priceRange} onValueChange={setPriceRange}>
               <SelectTrigger
                 className="h-10 w-full border-forest/20 bg-white text-sm font-semibold text-forest sm:w-64"
-                aria-label="Filtrar por presupuesto por regalo"
+                aria-label="Filtrar por precio"
               >
                 <SelectValue placeholder="¿Cuál es tu presupuesto por regalo?" />
               </SelectTrigger>

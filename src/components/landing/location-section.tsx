@@ -2,17 +2,11 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Building2, Clock, ExternalLink, MapPin, MessageCircle, Phone, Store } from "lucide-react";
+import { Building2, Clock, ExternalLink, MessageCircle, Phone, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { COMPANY, WHATSAPP_NUMBER } from "@/lib/catalog-data";
 
 const LOCATION_PHOTOS = [
-  {
-    src: "/location/chipichape.jpg",
-    alt: "Entrada del Edificio Centro Empresarial Chipichape con su letrero y dirección Av 6A Bis # 35N-100, sede de la oficina principal en Cali",
-    caption: "Ed. Centro Empresarial Chipichape",
-    detail: "Oficina Principal — Av 6A Bis # 35N-100, Of. 413",
-  },
   {
     src: "/location/santa-monica.jpg",
     alt: "Fachada real del punto de venta Anchetas Corporativas en Santa Mónica, Cali, con su letrero y puerta decorada de Navidad",
@@ -52,54 +46,41 @@ export function LocationSection() {
             transition={{ duration: 0.55 }}
             className="flex flex-col gap-5"
           >
-            {/* Mapa — clicable: abre la ubicación exacta en Google Maps */}
-            <a
-              href={COMPANY.mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Abrir nuestra ubicación en Google Maps (Av 6 N # 28N-39, San Vicente, Cali)"
-              title="Abrir en Google Maps"
-              className="group block overflow-hidden rounded-2xl border border-forest/10 shadow-lg shadow-forest/10 transition-all duration-300 hover:border-gold/60 hover:shadow-xl hover:shadow-forest/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
-            >
-              <div className="relative h-56 sm:h-64">
-                <Image
-                  src="/map_area.png"
-                  alt="Mapa de ubicación — Chipichape y Santa Mónica, Cali"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/70 to-transparent" />
-                {/* Indicador de acción siempre visible */}
-                <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-gold px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-forest-deep shadow-md transition-transform duration-300 group-hover:scale-105">
-                  <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-                  Ver en Google Maps
-                </span>
-                <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold transition-transform duration-300 group-hover:scale-110">
-                    <MapPin className="h-5 w-5 text-forest-deep" aria-hidden />
-                  </span>
-                  <p className="text-sm font-semibold text-cream">
-                    Cali, Valle del Cauca — Chipichape &amp; Santa Mónica
-                  </p>
-                </div>
-              </div>
-            </a>
+            {/* Mapa interactivo de Google Maps (se puede mover y hacer zoom) */}
+            <div className="relative h-72 overflow-hidden rounded-2xl border border-forest/10 bg-forest/5 shadow-lg shadow-forest/10 sm:h-80">
+              <iframe
+                src={COMPANY.mapsEmbedUrl}
+                title="Mapa de Google con la ubicación del Punto de Venta (Av 6 N # 28N-39, San Vicente, Cali)"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full border-0"
+              />
+              <a
+                href={COMPANY.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-gold px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-forest-deep shadow-md transition-transform duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest"
+              >
+                <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                Abrir en Google Maps
+              </a>
+            </div>
 
-            {/* Fotos: edificio + fachada */}
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {/* Foto de la fachada del punto de venta */}
+            <div className="grid grid-cols-1 gap-5">
               {LOCATION_PHOTOS.map((photo) => (
                 <figure
                   key={photo.src}
                   className="group relative overflow-hidden rounded-2xl border border-forest/10 shadow-md shadow-forest/10"
                 >
-                  <div className="relative aspect-[4/3]">
+                  <div className="relative aspect-[4/3] lg:aspect-video">
                     <Image
                       src={photo.src}
                       alt={photo.alt}
                       fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105 lg:object-top"
                     />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-deep/90 via-forest-deep/50 to-transparent p-3 pt-10">
                       <p className="text-sm font-bold leading-tight text-cream">
