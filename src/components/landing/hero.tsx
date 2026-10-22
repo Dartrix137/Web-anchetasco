@@ -31,7 +31,13 @@ const AUTOPLAY_MS = 6000;
 const MOBILE_MAX = "(max-width: 639px)";
 
 /** Banner con dirección de arte: el navegador descarga solo la versión de su tamaño */
-function SlideImage({ slide, eager }: { slide: (typeof SLIDES)[number]; eager: boolean }) {
+function SlideImage({
+  slide,
+  eager,
+}: {
+  slide: (typeof SLIDES)[number];
+  eager: boolean;
+}) {
   const common = {
     alt: slide.alt,
     fill: true,
@@ -49,7 +55,12 @@ function SlideImage({ slide, eager }: { slide: (typeof SLIDES)[number]; eager: b
   return (
     <picture>
       <source media={MOBILE_MAX} srcSet={mobileSrcSet} sizes="100vw" />
-      <img {...rest} alt={slide.alt} srcSet={desktopSrcSet} className="object-cover object-center" />
+      <img
+        {...rest}
+        alt={slide.alt}
+        srcSet={desktopSrcSet}
+        className="object-cover object-center"
+      />
     </picture>
   );
 }
@@ -132,7 +143,7 @@ export function Hero() {
       </div>
 
       {/* Contenido */}
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col px-4 pb-28 pt-24 sm:block sm:px-6 sm:pt-32 lg:px-8">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-col px-4 pb-20 pt-24 sm:block sm:pb-28 sm:px-6 sm:pt-32 lg:px-8">
         <div className="flex max-w-2xl flex-1 flex-col sm:block">
           <motion.p
             initial={{ opacity: 0, y: 12 }}
@@ -182,7 +193,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.5 }}
-            className="inline-flex items-center gap-2.5 self-start rounded-full bg-holly px-5 py-2.5 shadow-lg shadow-holly-deep/40 sm:mt-7"
+            className="inline-flex items-center gap-2.5 self-start rounded-full bg-holly px-5 py-2 shadow-lg shadow-holly-deep/40 sm:mt-7"
           >
             <Sparkle className="h-4 w-4 text-gold-light" aria-hidden />
             <span className="text-sm font-bold tracking-wide text-cream sm:text-base">
@@ -197,16 +208,17 @@ export function Hero() {
             </span>
           </motion.p>
 
+          {/* En móvil los botones van en una fila y pegados abajo para no tapar los productos */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.62 }}
-            className="mt-8 flex flex-col gap-4 sm:flex-row"
+            className="mt-3 grid grid-cols-2 gap-3 sm:mt-8 sm:flex sm:flex-row sm:gap-4"
           >
             <a href="#catalogo" className="sm:inline-flex">
               <Button
                 size="lg"
-                className="w-full border border-gold/70 bg-gold px-8 py-6 text-base font-semibold text-forest-deep shadow-xl shadow-gold/20 transition-all hover:-translate-y-0.5 hover:bg-gold-light sm:w-auto"
+                className="w-full border border-gold/70 bg-gold px-3 py-6 text-sm font-semibold sm:px-8 sm:text-base text-forest-deep shadow-xl shadow-gold/20 transition-all hover:-translate-y-0.5 hover:bg-gold-light sm:w-auto"
               >
                 Explorar el catálogo
               </Button>
@@ -215,7 +227,7 @@ export function Hero() {
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full border-cream/40 bg-transparent px-8 py-6 text-base font-semibold text-cream backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-gold hover:bg-cream/10 hover:text-gold sm:w-auto"
+                className="w-full border-cream/40 bg-transparent px-3 py-6 text-sm font-semibold sm:px-8 sm:text-base text-cream backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-gold hover:bg-cream/10 hover:text-gold sm:w-auto"
               >
                 Cotizar ahora
               </Button>
@@ -225,7 +237,7 @@ export function Hero() {
       </div>
 
       {/* Controles del carrusel */}
-      <div className="absolute bottom-16 right-4 z-10 flex items-center gap-2 sm:right-6 lg:right-8">
+      <div className="absolute bottom-5 right-4 z-10 sm:bottom-16 flex items-center gap-2 sm:right-6 lg:right-8">
         <button
           type="button"
           onClick={scrollPrev}
