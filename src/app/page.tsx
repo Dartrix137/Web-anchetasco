@@ -12,6 +12,7 @@ import { SiteFooter } from "@/components/landing/site-footer";
 import { QuoteBar } from "@/components/landing/quote-bar";
 import { CompareTray } from "@/components/landing/compare-tray";
 import { PersonalizationFloat } from "@/components/landing/personalization-float";
+import { WhatsAppFloat } from "@/components/landing/whatsapp-float";
 
 export default function Home() {
   return (
@@ -32,6 +33,7 @@ export default function Home() {
       <QuoteBar />
       <CompareTray />
       <PersonalizationFloat />
+      <WhatsAppFloat />
     </div>
   );
 }

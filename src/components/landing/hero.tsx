@@ -236,8 +236,8 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Controles del carrusel */}
-      <div className="absolute bottom-5 right-4 z-10 sm:bottom-16 flex items-center gap-2 sm:right-6 lg:right-8">
+      {/* Controles del carrusel (centrados en móvil: a la derecha va el botón de WhatsApp) */}
+      <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 sm:bottom-24 sm:left-auto sm:right-6 sm:translate-x-0 lg:right-8">
         <button
           type="button"
           onClick={scrollPrev}

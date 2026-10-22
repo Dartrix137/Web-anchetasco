@@ -8,6 +8,10 @@ export const IVA_RATE = 0.19;
 // WhatsApp corporativo de cotizaciones (punto de venta configurado como empresa)
 export const WHATSAPP_NUMBER = "573123888573";
 
+// Mensaje del botón flotante de WhatsApp
+export const WHATSAPP_FLOAT_MESSAGE =
+  "Hola. Vengo de la web de Anchetas y me interesa cotizar una opción con ustedes.";
+
 // Costo adicional de personalización por unidad (fuera de la campaña anticipada)
 export const PERSONALIZATION_COST = 3500;
 
