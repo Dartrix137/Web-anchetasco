@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const SLIDES = [
   {
     src: "/hero.png",
-    mobileSrc: "/hero/hero_mobile1.png",
+    mobileSrc: "/hero/hero_mobile1_v2.png",
     alt: "Anchetas corporativas con vino, maletines negros y productos gourmet navideños",
   },
   {
