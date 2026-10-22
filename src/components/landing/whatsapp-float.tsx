@@ -9,7 +9,7 @@ const WHATSAPP_PATH =
 
 /**
  * Botón flotante (abajo-derecha) que abre WhatsApp con un mensaje de saludo.
- * Igual que el de personalización, sube cuando la barra de cotización está visible.
+ * Sube cuando la barra de cotización está visible.
  */
 export function WhatsAppFloat() {
   const itemCount = useQuoteStore((s) => s.items.length);

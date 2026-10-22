@@ -628,7 +628,7 @@ export function QuoteForm() {
                           </div>
                           <p className="text-[11px] text-muted-foreground">
                             Costo adicional de ${PERSONALIZATION_COST.toLocaleString("es-CO")} por
-                            unidad · gratis comprando antes del 15 de noviembre
+                            unidad
                           </p>
                         </FormItem>
                       )}

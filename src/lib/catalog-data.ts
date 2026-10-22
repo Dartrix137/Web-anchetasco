@@ -12,18 +12,8 @@ export const WHATSAPP_NUMBER = "573123888573";
 export const WHATSAPP_FLOAT_MESSAGE =
   "Hola. Vengo de la web de Anchetas y me interesa cotizar una opción con ustedes.";
 
-// Costo adicional de personalización por unidad (fuera de la campaña anticipada)
+// Costo adicional de personalización por unidad
 export const PERSONALIZATION_COST = 3500;
-
-// Campaña de personalización anticipada y programada
-export const PERSONALIZATION_CAMPAIGN = {
-  deadline: "15 de noviembre de 2026",
-  deadlineISO: "2026-11-15",
-  minUnits: 50,
-  note:
-    "Estampado o bordado según el maletín seleccionado (algunos modelos solo admiten estampado). " +
-    "Compra mínima de 50 unidades. Anticipo confirmado a más tardar el 15 de noviembre de 2026.",
-};
 
 export interface CatalogProduct {
   id: string;
