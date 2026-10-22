@@ -60,7 +60,7 @@ Al reemplazar una imagen en `public/` manteniendo el mismo nombre, borrar `.next
 Los textos, precios, teléfonos, número de WhatsApp y productos se cambian en `src/lib/catalog-data.ts`. El mensaje de WhatsApp se arma en `buildWhatsAppMessage` dentro de `src/components/landing/quote-form.tsx`.
 
 Logo y favicon:
-- `public/logo_brand.png` (3651×1545, ≈2,36:1) es el logo de Ancheta & Co. en el header (caja 132×56). En el footer, el recuadro de logos corporativos muestra `public/brands/Logo-Nativity-World.webp` (252×75, caja 148×44) y `public/brands/Pesebre-logo.webp`. Si cambia la proporción de un logo, ajustar su caja para que la imagen la llene (usan `fill` + `object-contain`).
+- `public/logo_brand.png` (3651×1545, ≈2,36:1) es el logo de Ancheta & Co. en el header (caja 132×56). En el footer, el recuadro de logos corporativos muestra `public/brands/Logo-Nativity-World.webp` (252×75, caja 148×44) y `public/brands/pesebre-logo-96.webp` (96×96 generado con sharp desde `Pesebre-logo.webp`, con `unoptimized`: la variante w=96 del optimizador se colgaba en producción). Si cambia la proporción de un logo, ajustar su caja para que la imagen la llene (usan `fill` + `object-contain`).
 - Favicons generados con sharp desde `public/fav2.png` (fuente 1210×1210), recortados al anillo verde: `favicon-32x32.png` y `favicon-192x192.png` (círculo con esquinas transparentes) y `apple-touch-icon.png` (180×180, fondo blanco). Declarados en `metadata.icons` de `src/app/layout.tsx`. Si cambia el favicon, regenerar los tres.
 
 SEO (`metadata` en `src/app/layout.tsx`):

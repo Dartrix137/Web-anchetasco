@@ -59,11 +59,14 @@ export function SiteFooter() {
                 className="group flex h-14 items-center gap-3 rounded-xl border border-cream/15 bg-cream/5 px-3 transition-all hover:border-gold/60"
               >
                 <span className="flex h-10 w-10 items-center justify-center overflow-hidden">
+                  {/* Versión ya reducida (96×96) servida sin el optimizador: la variante
+                      w=96 de Pesebre-logo.webp se quedaba colgada en producción */}
                   <Image
-                    src="/brands/Pesebre-logo.webp"
+                    src="/brands/pesebre-logo-96.webp"
                     alt="Logo El Pesebre Más Grande del Mundo"
                     width={40}
                     height={40}
+                    unoptimized
                     className="h-full w-full rounded-lg bg-white object-contain p-1"
                   />
                 </span>
