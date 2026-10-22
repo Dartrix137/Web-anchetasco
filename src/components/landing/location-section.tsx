@@ -8,8 +8,8 @@ import { COMPANY, WHATSAPP_NUMBER } from "@/lib/catalog-data";
 
 const LOCATION_PHOTOS = [
   {
-    src: "/location/santa-monica.jpg",
-    alt: "Fachada real del punto de venta Anchetas Corporativas en Santa Mónica, Cali, con su letrero y puerta decorada de Navidad",
+    src: "/location/santa-monica-fachada.jpg",
+    alt: "Fachada completa del punto de venta Anchetas Corporativas en Santa Mónica, Cali, con su letrero navideño y la entrada al segundo piso",
     caption: "Punto de Venta Santa Mónica",
     detail: "Av 6 Norte # 28N-41",
   },
@@ -74,13 +74,13 @@ export function LocationSection() {
                   key={photo.src}
                   className="group relative overflow-hidden rounded-2xl border border-forest/10 shadow-md shadow-forest/10"
                 >
-                  <div className="relative aspect-[4/3] lg:aspect-video">
+                  <div className="relative aspect-video">
                     <Image
                       src={photo.src}
                       alt={photo.alt}
                       fill
                       sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105 lg:object-top"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-deep/90 via-forest-deep/50 to-transparent p-3 pt-10">
                       <p className="text-sm font-bold leading-tight text-cream">
