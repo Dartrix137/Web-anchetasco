@@ -20,7 +20,7 @@ const SLIDES = [
   },
   {
     src: "/hero/hero_slide3.png",
-    mobileSrc: "/hero/hero_mobile3.png",
+    mobileSrc: "/hero/hero_mobile3_v2.png",
     alt: "Vinos, dulces y delicias navideñas de nuestras anchetas con ramitas de pino",
   },
 ];
