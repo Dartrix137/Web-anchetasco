@@ -1,17 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Boxes, Factory, FileCheck2, PenTool, Route, Truck, Users } from "lucide-react";
-
-const CAPABILITIES = [
-  { icon: Factory, label: "Producción" },
-  { icon: Boxes, label: "Armado" },
-  { icon: PenTool, label: "Personalización" },
-  { icon: Truck, label: "Logística nacional" },
-  { icon: FileCheck2, label: "Facturación electrónica" },
-  { icon: Users, label: "Asesoría comercial" },
-  { icon: Route, label: "Planeación de entregas" },
-];
+import { Building2, Phone, Store } from "lucide-react";
+import { COMPANY } from "@/lib/catalog-data";
 
 export function NationalStrip() {
   return (
@@ -45,16 +36,34 @@ export function NationalStrip() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.5, delay: 0.12 }}
-            className="flex flex-wrap gap-2.5"
-            aria-label="Capacidades"
+            className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-auto"
+            aria-label="Puntos de atención"
           >
-            {CAPABILITIES.map((cap) => (
+            {/* Misma información que la sección de ubicación (COMPANY.locations) */}
+            {COMPANY.locations.map((loc) => (
               <li
-                key={cap.label}
-                className="flex items-center gap-2 rounded-full border border-cream/15 bg-forest/60 px-3.5 py-1.5 text-xs font-semibold text-cream/85 transition-colors hover:border-gold/50 hover:text-gold"
+                key={loc.title}
+                className="flex items-start gap-3 rounded-2xl border border-cream/15 bg-forest/60 p-4 transition-colors hover:border-gold/50"
               >
-                <cap.icon className="h-3.5 w-3.5 text-gold" aria-hidden />
-                {cap.label}
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-forest-deep text-gold">
+                  {loc.title.includes("Oficina") ? (
+                    <Building2 className="h-4 w-4" aria-hidden />
+                  ) : (
+                    <Store className="h-4 w-4" aria-hidden />
+                  )}
+                </span>
+                <div className="min-w-0">
+                  <p className="font-display text-base font-bold text-cream">{loc.title}</p>
+                  <p className="mt-0.5 text-xs font-medium text-cream/85">{loc.address}</p>
+                  <p className="text-xs text-cream/60">{loc.detail}</p>
+                  <a
+                    href={`tel:${loc.phone.replace(/\s/g, "")}`}
+                    className="mt-1.5 inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-gold transition-colors hover:text-gold-light"
+                  >
+                    <Phone className="h-3 w-3" aria-hidden />
+                    {loc.phone}
+                  </a>
+                </div>
               </li>
             ))}
           </motion.ul>
