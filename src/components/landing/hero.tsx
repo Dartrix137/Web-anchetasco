@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { getImageProps } from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
@@ -10,19 +10,49 @@ import { Button } from "@/components/ui/button";
 const SLIDES = [
   {
     src: "/hero.png",
+    mobileSrc: "/hero/hero_mobile1.png",
     alt: "Anchetas corporativas con vino, maletines negros y productos gourmet navideños",
   },
   {
     src: "/hero/hero_slide2.png",
+    mobileSrc: "/hero/hero_mobile2.png",
     alt: "Cajas de regalo rojas con detalles dorados y maletines corporativos premium sobre pedestales",
   },
   {
     src: "/hero/hero_slide3.png",
+    mobileSrc: "/hero/hero_mobile3.png",
     alt: "Vinos, dulces y delicias navideñas de nuestras anchetas con ramitas de pino",
   },
 ];
 
 const AUTOPLAY_MS = 6000;
+
+// Breakpoint `sm` de Tailwind: por debajo se usa el banner vertical de móvil
+const MOBILE_MAX = "(max-width: 639px)";
+
+/** Banner con dirección de arte: el navegador descarga solo la versión de su tamaño */
+function SlideImage({ slide, eager }: { slide: (typeof SLIDES)[number]; eager: boolean }) {
+  const common = {
+    alt: slide.alt,
+    fill: true,
+    sizes: "100vw",
+    loading: eager ? ("eager" as const) : undefined,
+    fetchPriority: eager ? ("high" as const) : undefined,
+  };
+  const {
+    props: { srcSet: desktopSrcSet, ...rest },
+  } = getImageProps({ ...common, src: slide.src });
+  const {
+    props: { srcSet: mobileSrcSet },
+  } = getImageProps({ ...common, src: slide.mobileSrc });
+
+  return (
+    <picture>
+      <source media={MOBILE_MAX} srcSet={mobileSrcSet} sizes="100vw" />
+      <img {...rest} alt={slide.alt} srcSet={desktopSrcSet} className="object-cover object-center" />
+    </picture>
+  );
+}
 
 export function Hero() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 28 });
@@ -89,14 +119,7 @@ export function Hero() {
                 key={slide.src}
                 className="relative h-full min-w-0 flex-[0_0_100%]"
               >
-                <Image
-                  src={slide.src}
-                  alt={slide.alt}
-                  fill
-                  priority={slide.src === SLIDES[0].src}
-                  className="object-cover object-center"
-                  sizes="100vw"
-                />
+                <SlideImage slide={slide} eager={slide.src === SLIDES[0].src} />
               </div>
             ))}
           </div>
