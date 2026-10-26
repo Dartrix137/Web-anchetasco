@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { COMPANY } from "@/lib/catalog-data";
+import { CookieSettingsButton } from "@/components/landing/cookie-consent";
 
 const FOOTER_LINKS = [
   { href: "#por-que-nosotros", label: "Beneficios" },
@@ -128,8 +129,9 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-cream/10 pt-6 sm:flex-row">
-          <p className="text-xs text-cream/50">
-            © 2026 Ancheta &amp; Co. Todos los derechos reservados.
+          <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-cream/50">
+            <span>© 2026 Ancheta &amp; Co. Todos los derechos reservados.</span>
+            <CookieSettingsButton className="underline-offset-4 transition-colors hover:text-gold hover:underline" />
           </p>
           <p className="flex items-center gap-1.5 text-xs text-cream/50">
             Diseño y Desarrollo por{" "}

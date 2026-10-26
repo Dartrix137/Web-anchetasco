@@ -66,6 +66,7 @@ Logo y favicon:
 SEO (`metadata` en `src/app/layout.tsx`):
 - `metadataBase` = `https://anchetasco.com` (convierte en absolutas las URLs de canonical y Open Graph) y `alternates.canonical: "/"`.
 - Vista previa al compartir (Open Graph + Twitter `summary_large_image`): `public/og-image.jpg`, 1200×630, ~100 KB (WhatsApp ignora imágenes muy pesadas). Se generó con sharp a partir de `hero.png` con `logo_brand.png` encima a la izquierda; si cambian el hero o el logo, regenerarla.
+- Tracking: Google Tag Manager (`GTM-MCXWQXHN`, con GA4 y Google Ads) en `layout.tsx`, con **Consent Mode v2**. Un script inline **antes** del snippet de GTM pone todo en `denied` y, si `localStorage["cookie-consent"] === "granted"`, lo concede. El banner es `src/components/landing/cookie-consent.tsx` (lógica en `src/lib/cookie-consent.ts`). El footer tiene "Preferencias de cookies" para reabrirlo. Cada decisión se envía a GTM como evento `cookie_consent_update`.
 - `public/robots.txt` permite todo y apunta a `/sitemap.xml` (generado por `src/app/sitemap.ts`). No crear `src/app/robots.ts` mientras exista `public/robots.txt` (Next da conflicto).
 
 ## Comandos

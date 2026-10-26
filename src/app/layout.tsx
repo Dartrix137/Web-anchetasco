@@ -3,6 +3,8 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import { CookieConsent } from "@/components/landing/cookie-consent";
+import { CONSENT_STORAGE_KEY, consentState } from "@/lib/cookie-consent";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -78,6 +80,16 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
+        {/* Consent Mode v2: todo denegado hasta que el visitante acepte el banner.
+            Debe ir ANTES del snippet de GTM. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;
+gtag('consent','default',${JSON.stringify({ ...consentState("denied"), wait_for_update: 500 })});
+gtag('set','ads_data_redaction',true);
+try{if(localStorage.getItem('${CONSENT_STORAGE_KEY}')==='granted')gtag('consent','update',${JSON.stringify(consentState("granted"))});}catch(e){}`,
+          }}
+        />
         {/* Google Tag Manager */}
         <script
           dangerouslySetInnerHTML={{
@@ -106,6 +118,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {children}
         <Toaster />
         <Sonner position="bottom-right" richColors />
+        <CookieConsent />
       </body>
     </html>
   );
