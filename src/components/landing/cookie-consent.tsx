@@ -53,9 +53,9 @@ export function CookieConsent() {
             </h2>
           </div>
           <p id="cookie-consent-text" className="mt-2 text-sm leading-relaxed text-cream/75">
-            Con tu permiso usamos cookies de Google Analytics y Google Ads para medir las
-            visitas y mejorar nuestros anuncios. Puedes aceptarlas o seguir solo con las
-            necesarias.
+            Utilizamos cookies necesarias para el funcionamiento del sitio y, con tu
+            autorización, cookies de analítica y publicidad para medir y mejorar nuestras
+            campañas. Puedes aceptarlas o seguir solo con las necesarias.
           </p>
           <div className="mt-4 grid grid-cols-2 gap-2">
             <Button
