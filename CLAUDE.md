@@ -10,6 +10,7 @@ Landing page de **Ancheta & Co.** (Detalles Corporativos, Cali, Colombia): anche
 - Configurador "Crea tu ancheta" (formatos de maletín + packs, precios con IVA 19 %).
 - Carrito de cotización (barra flotante) y formulario de cotización que **abre WhatsApp** con el mensaje armado (`wa.me`). **No hay base de datos ni backend de cotizaciones**: todo el estado vive en el navegador (zustand) y la cotización se envía solo por WhatsApp.
 - Secciones de proveedores/marcas, cierre, ubicación y footer.
+- Página aparte `/politica-de-datos` (política de tratamiento de datos). Header y footer se reutilizan ahí, por eso sus enlaces son `/#seccion` y no `#seccion`.
 
 Proyecto generado originalmente con la plataforma **chat.z.ai** (agente "Z.ai Code") y luego limpiado de sus dependencias (ver más abajo). El historial de commits de z.ai no está en este repositorio.
 
@@ -39,7 +40,9 @@ src/
     page.tsx             # Compone la landing con las secciones de components/landing
     globals.css          # Tailwind 4 + tokens de color (forest, gold, cream…) y tema shadcn
     api/route.ts         # GET /api -> {"message":"Hello, world!"} (plantilla; útil como healthcheck)
-    sitemap.ts           # /sitemap.xml (una sola URL: https://anchetasco.com/)
+    sitemap.ts           # /sitemap.xml (la landing y /politica-de-datos)
+    politica-de-datos/   # /politica-de-datos: Política de Tratamiento de Datos Personales (Ley 1581),
+                         # texto del .docx entregado por el cliente; enlazada en footer, formulario y banner de cookies
   components/
     landing/             # Secciones de la landing (una por archivo, kebab-case)
     ui/                  # Componentes shadcn/ui generados (no editar salvo necesidad)

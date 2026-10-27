@@ -667,7 +667,16 @@ export function QuoteForm() {
 
                   <p className="text-center text-xs leading-relaxed text-muted-foreground">
                     Se abrirá WhatsApp con tu solicitud lista para enviar · Al enviar aceptas ser
-                    contactado por nuestro equipo comercial · {COMPANY.whatsapp}
+                    contactado por nuestro equipo comercial y el tratamiento de tus datos según
+                    nuestra{" "}
+                    <a
+                      href="/politica-de-datos"
+                      target="_blank"
+                      className="font-semibold text-forest underline underline-offset-2 hover:text-gold-deep"
+                    >
+                      Política de tratamiento de datos
+                    </a>{" "}
+                    · {COMPANY.whatsapp}
                   </p>
                 </form>
               </Form>

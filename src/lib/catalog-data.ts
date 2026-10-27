@@ -489,6 +489,9 @@ export const SPECIAL_PACKS: PackOption[] = [
 export const COMPANY = {
   brand: "Ancheta & Co.",
   legalName: "Nativity World S.A.S.",
+  nit: "900.716.602",
+  // Correo para consultas y reclamos de protección de datos (Ley 1581 de 2012)
+  dataProtectionEmail: "comercial@nativityworld.co",
   slogan: "El Pesebre Más Grande del Mundo",
   campaign: "Detalles Corporativos — Navidad 2026",
   whatsapp: "+57 312 388 8573",

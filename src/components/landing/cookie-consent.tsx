@@ -55,7 +55,13 @@ export function CookieConsent() {
           <p id="cookie-consent-text" className="mt-2 text-sm leading-relaxed text-cream/75">
             Utilizamos cookies necesarias para el funcionamiento del sitio y, con tu
             autorización, cookies de analítica y publicidad para medir y mejorar nuestras
-            campañas. Puedes aceptarlas o seguir solo con las necesarias.
+            campañas. Puedes aceptarlas o seguir solo con las necesarias.{" "}
+            <a
+              href="/politica-de-datos"
+              className="font-semibold text-gold underline-offset-4 hover:text-gold-light hover:underline"
+            >
+              Más información
+            </a>
           </p>
           <div className="mt-4 grid grid-cols-2 gap-2">
             <Button

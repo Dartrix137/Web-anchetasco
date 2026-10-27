@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { useQuoteStore } from "@/lib/quote-store";
 
 const NAV_LINKS = [
-  { href: "#catalogo", label: "Catálogo" },
-  { href: "#configurador", label: "Crea tu ancheta" },
-  { href: "#cotizar", label: "Cotizar" },
-  { href: "#proveedores", label: "Proveedores" },
-  { href: "#ubicacion", label: "Ubicación" },
+  { href: "/#catalogo", label: "Catálogo" },
+  { href: "/#configurador", label: "Crea tu ancheta" },
+  { href: "/#cotizar", label: "Cotizar" },
+  { href: "/#proveedores", label: "Proveedores" },
+  { href: "/#ubicacion", label: "Ubicación" },
 ];
 
 export function SiteHeader() {
@@ -36,7 +36,7 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <a href="#inicio" className="flex items-center" aria-label="Ancheta & Co. - Inicio">
+        <a href="/#inicio" className="flex items-center" aria-label="Ancheta & Co. - Inicio">
           {/* Caja con la proporción del logo (3651×1545 ≈ 2,36:1) */}
           <span className="relative h-14 w-[132px] shrink-0">
             <Image
@@ -65,7 +65,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           {/* Botón cotizar con contador */}
-          <a href="#cotizar" className="hidden sm:block">
+          <a href="/#cotizar" className="hidden sm:block">
             <Button
               asChild
               className="group relative border border-gold/70 bg-gold text-sm font-semibold text-forest-deep shadow-md transition-all hover:bg-gold-light hover:shadow-lg"
@@ -109,7 +109,7 @@ export function SiteHeader() {
                 {link.label}
               </a>
             ))}
-            <a href="#cotizar" onClick={() => setMobileOpen(false)} className="mt-2">
+            <a href="/#cotizar" onClick={() => setMobileOpen(false)} className="mt-2">
               <Button className="w-full border border-gold/70 bg-gold font-semibold text-forest-deep hover:bg-gold-light">
                 <ShoppingBag className="mr-2 h-4 w-4" aria-hidden />
                 Cotizar {items.length > 0 && `(${items.length})`}
