@@ -46,6 +46,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  // Verificación del dominio en Meta (Business Manager). Se renderiza en el <head>
+  // del HTML del servidor: <meta name="facebook-domain-verification" content="…">
+  verification: {
+    other: {
+      "facebook-domain-verification": "zxe9auj2j3vrhq3sa2n9mj4c0vvdf0",
+    },
+  },
   // Vista previa al compartir el enlace (WhatsApp, Facebook, LinkedIn…).
   // public/og-image.jpg: 1200×630, generada desde hero.png + logo_brand.png
   openGraph: {
