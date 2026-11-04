@@ -17,7 +17,7 @@ git push a main
 | Carpeta de la app | `/home/deploy/app` (`docker-compose.yml`, `Caddyfile`, `.env`) |
 | Imagen | `ghcr.io/dartrix137/web-anchetasco` (tags `latest` y SHA corto del commit, p. ej. `a1b2c3d`) |
 | Contenedores | `app` (Next.js, puerto 3000 solo en la red interna) y `caddy` (único que publica 80/443) |
-| Base de datos | **No hay.** Las cotizaciones se envían por WhatsApp; la app no guarda datos. |
+| Base de datos | **No hay en el VPS.** Las cotizaciones se envían por WhatsApp. La atribución de cada cotización (código `COT-`, UTMs, IDs publicitarios) se reenvía a un Worker de Cloudflare con D1 (sección 5). |
 
 Archivos del repo implicados: `Dockerfile`, `.dockerignore`, `deploy/docker-compose.yml`, `deploy/Caddyfile`, `deploy/.env.example`, `.github/workflows/deploy.yml`.
 
@@ -88,7 +88,7 @@ EOF
 chmod 600 .env
 ```
 
-(Es el contenido de `deploy/.env.example`. La app no necesita más variables.)
+(Es el contenido de `deploy/.env.example`. Añade también las variables del Worker de atribución: ver «Atribución de cotizaciones» en la sección 5.)
 
 ### Acceso a la imagen en GHCR
 
@@ -146,6 +146,22 @@ Todos los comandos se ejecutan en el servidor, dentro de `/home/deploy/app`.
 Docker ya limita los logs a 10 MB × 3 archivos por contenedor (configuración del servidor).
 
 Para desplegar, solo haz push a `main`. Los cambios en `deploy/docker-compose.yml` y `deploy/Caddyfile` también se despliegan solos. **No edites esos archivos en el servidor**: el siguiente despliegue los sobrescribe. El `.env` del servidor no se toca nunca.
+
+### Atribución de cotizaciones (Cloudflare Worker)
+
+La ruta `POST /api/quote-attribution` reenvía al Worker el código `COT-` y la atribución de cada cotización. La URL y la clave privada viven **solo** en el `.env` del servidor (el contenedor lo carga con `env_file`); nunca llegan al navegador ni al repo.
+
+```bash
+cd /home/deploy/app
+nano .env          # añade (sin comillas, salvo que la clave tenga "$"; entonces entre comillas simples):
+#   ATTRIBUTION_WORKER_URL=https://<worker>.workers.dev/<ruta>
+#   ATTRIBUTION_WORKER_SECRET=<clave>
+chmod 600 .env
+docker compose up -d app          # recrea el contenedor para que lea las variables
+docker compose exec app printenv ATTRIBUTION_WORKER_URL   # comprobar
+```
+
+Errores del Worker: `docker compose logs app | grep quote-attribution`. Si faltan las variables, la web sigue funcionando (WhatsApp abre igual) y en el log aparece `Falta ATTRIBUTION_WORKER_URL…`.
 
 ### Volver a una versión anterior
 

@@ -87,6 +87,11 @@ export function getStoredConsent(): ConsentValue | null {
   return value;
 }
 
+/** ¿El visitante aceptó las cookies? Solo lee, sin sincronizar localStorage y cookie. */
+export function hasConsentGranted(): boolean {
+  return (readLocalStorage() ?? readCookie()) === "granted";
+}
+
 export function saveConsent(value: ConsentValue) {
   writeLocalStorage(value);
   persistCookie(value);

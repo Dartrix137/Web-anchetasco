@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -45,6 +45,12 @@ import {
   formatCOP,
 } from "@/lib/catalog-data";
 import { useQuoteStore, MAX_ITEM_QUANTITY } from "@/lib/quote-store";
+import {
+  collectAttribution,
+  generateQuoteId,
+  pushQuoteEvent,
+  sendQuoteAttribution,
+} from "@/lib/attribution";
 
 const baseSchema = z.object({
   name: z.string().min(2, "Ingresa tu nombre completo"),
@@ -121,8 +127,15 @@ export function QuoteForm() {
 
   const personType = useWatch({ control: form.control, name: "personType" }) ?? "natural";
 
-  const buildWhatsAppMessage = (values: QuoteFormValues) => {
+  // Última cotización enviada: si se reenvía sin cambios, se reutiliza el código
+  // (no se crea otra fila en D1 ni otro evento en GA4/Meta)
+  const lastQuoteRef = useRef<{ key: string; quoteId: string } | null>(null);
+
+  const buildWhatsAppMessage = (values: QuoteFormValues, quoteId: string) => {
     const lines: string[] = [
+      // Primera línea, como la ponía el listener de GTM (el equipo comercial la busca ahí)
+      `Código de cotización: ${quoteId}`,
+      "",
       "¡Hola Ancheta & Co.! 👋",
       "",
       `*${isAdviceMode ? "SOLICITUD DE ASESORÍA PERSONALIZADA" : "SOLICITUD DE COTIZACIÓN"} — NAVIDAD 2026*`,
@@ -176,7 +189,7 @@ export function QuoteForm() {
 
     lines.push("", "¡Quedo atento(a) para finalizar mi cotización. ¡Gracias! 🎁");
 
-    return encodeURIComponent(lines.join("\n"));
+    return lines.join("\n");
   };
 
   const handleWhatsApp = async () => {
@@ -189,7 +202,26 @@ export function QuoteForm() {
     }
 
     const values = form.getValues();
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${buildWhatsAppMessage(values)}`;
+
+    // Un código por cotización, generado aquí (antes lo generaba GTM al abrir WhatsApp)
+    const key = buildWhatsAppMessage(values, "");
+    const isRepeat = lastQuoteRef.current?.key === key;
+    const quoteId = isRepeat ? lastQuoteRef.current!.quoteId : generateQuoteId();
+    lastQuoteRef.current = { key, quoteId };
+
+    if (!isRepeat) {
+      pushQuoteEvent({
+        quoteId,
+        quoteType: isAdviceMode ? "asesoria" : "cotizacion",
+        value: isAdviceMode ? undefined : totalEstimate,
+        units: isAdviceMode ? values.estimatedQuantity : totalUnits,
+      });
+      sendQuoteAttribution(collectAttribution(quoteId));
+    }
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+      buildWhatsAppMessage(values, quoteId)
+    )}`;
 
     // Sin "noopener" en los features: con él, window.open siempre devuelve null
     // y no se puede distinguir de un popup bloqueado (abría WhatsApp dos veces).

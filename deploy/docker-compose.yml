@@ -14,8 +14,9 @@ services:
     #   APP_TAG=<sha> docker compose up -d app
     image: ${APP_IMAGE:-ghcr.io/dartrix137/web-anchetasco}:${APP_TAG:-latest}
     restart: unless-stopped
-    # La app no necesita variables propias. Si algún día las necesita, añadir:
-    #   env_file: .env
+    # ATTRIBUTION_WORKER_URL y ATTRIBUTION_WORKER_SECRET (atribución de cotizaciones,
+    # ver src/app/api/quote-attribution/route.ts). Solo las lee el servidor Node.
+    env_file: .env
     environment:
       NODE_ENV: production
       # Heap de V8 por debajo del límite del contenedor

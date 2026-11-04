@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/landing/cookie-consent";
+import { AttributionCapture } from "@/components/landing/attribution-capture";
 import { CONSENT_STORAGE_KEY, consentState } from "@/lib/cookie-consent";
 
 const inter = Inter({
@@ -129,6 +130,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <Toaster />
         <Sonner position="bottom-right" richColors />
         <CookieConsent />
+        <AttributionCapture />
       </body>
     </html>
   );

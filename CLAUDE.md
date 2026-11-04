@@ -8,7 +8,7 @@ Landing page de **Ancheta & Co.** (Detalles Corporativos, Cali, Colombia): anche
 
 - Hero en carrusel, catálogo de productos (anchetas) con filtros, modal de detalle y comparador.
 - Configurador "Crea tu ancheta" (formatos de maletín + packs, precios con IVA 19 %).
-- Carrito de cotización (barra flotante) y formulario de cotización que **abre WhatsApp** con el mensaje armado (`wa.me`). **No hay base de datos ni backend de cotizaciones**: todo el estado vive en el navegador (zustand) y la cotización se envía solo por WhatsApp.
+- Carrito de cotización (barra flotante) y formulario de cotización que **abre WhatsApp** con el mensaje armado (`wa.me`). **No hay base de datos propia**: el estado vive en el navegador (zustand) y la cotización se envía por WhatsApp. Solo la **atribución** de cada cotización (código `COT-`, UTMs, IDs publicitarios) se reenvía desde el servidor a un Worker de Cloudflare con D1 (ver `docs/tracking-cotizaciones.md`).
 - Secciones de proveedores/marcas, cierre, ubicación y footer.
 - Página aparte `/politica-de-datos` (política de tratamiento de datos). Header y footer se reutilizan ahí, por eso sus enlaces son `/#seccion` y no `#seccion`.
 
@@ -40,6 +40,7 @@ src/
     page.tsx             # Compone la landing con las secciones de components/landing
     globals.css          # Tailwind 4 + tokens de color (forest, gold, cream…) y tema shadcn
     api/route.ts         # GET /api -> {"message":"Hello, world!"} (plantilla; útil como healthcheck)
+    api/quote-attribution/route.ts  # POST: reenvía la atribución de la cotización al Worker (clave privada)
     sitemap.ts           # /sitemap.xml (la landing y /politica-de-datos)
     politica-de-datos/   # /politica-de-datos: Política de Tratamiento de Datos Personales (Ley 1581),
                          # texto del .docx entregado por el cliente; enlazada en footer, formulario y banner de cookies
@@ -50,8 +51,10 @@ src/
   lib/
     catalog-data.ts      # FUENTE DE DATOS: productos, formatos, packs, precios, WhatsApp, empresa, ciudades
     quote-store.ts       # Store zustand del carrito/comparador
+    attribution.ts       # Código COT-, captura de UTMs/click IDs, evento quote_whatsapp_open
     utils.ts             # cn()
 public/                  # Imágenes servidas (products, packs, formats, hero, brands, location…) ~58 MB
+docs/tracking-cotizaciones.md  # Flujo de atribución, contrato con el Worker y cambios en GTM
 docs/worklog-zai.md      # Bitácora del agente de z.ai: historial de decisiones de diseño/contenido y
                          # de cómo se procesaron las imágenes (útil antes de cambiar fotos o secciones)
 upload/                  # Solo local, fuera de git: originales subidos a z.ai (~111 MB). NO lo usa la app;
@@ -69,6 +72,7 @@ Logo y favicon:
 SEO (`metadata` en `src/app/layout.tsx`):
 - `metadataBase` = `https://anchetasco.com` (convierte en absolutas las URLs de canonical y Open Graph) y `alternates.canonical: "/"`.
 - Vista previa al compartir (Open Graph + Twitter `summary_large_image`): `public/og-image.jpg`, 1200×630, ~100 KB (WhatsApp ignora imágenes muy pesadas). Se generó con sharp a partir de `hero.png` con `logo_brand.png` encima a la izquierda; si cambian el hero o el logo, regenerarla.
+- Código de cotización y atribución: ver `docs/tracking-cotizaciones.md`. El código `COT-` + 8 hex lo genera Next (antes un tag de GTM que envolvía `window.open`) y va en la primera línea del mensaje de WhatsApp.
 - Tracking: Google Tag Manager (`GTM-MCXWQXHN`, con GA4 y Google Ads) en `layout.tsx`, con **Consent Mode v2**. Un script inline **antes** del snippet de GTM pone todo en `denied` y, si la decisión guardada es `granted`, lo concede. La decisión se guarda en `localStorage["cookie-consent"]` y en una cookie `cookie-consent` de 12 meses que pone el servidor (`POST /api/cookie-consent`, no HttpOnly para que la lea el script): Safari (ITP) borra a los 7 días lo escrito con JavaScript, pero no las cookies con `Set-Cookie`. Si falta en uno de los dos sitios, se copia desde el otro al cargar. El banner es `src/components/landing/cookie-consent.tsx` (lógica en `src/lib/cookie-consent.ts`). El footer tiene "Preferencias de cookies" para reabrirlo. Cada decisión se envía a GTM como evento `cookie_consent_update`.
 - `public/robots.txt` permite todo y apunta a `/sitemap.xml` (generado por `src/app/sitemap.ts`). No crear `src/app/robots.ts` mientras exista `public/robots.txt` (Next da conflicto).
 
@@ -90,10 +94,12 @@ bunx tsc --noEmit           # chequeo de tipos (el build NO lo hace, ver Convenc
 
 ## Variables de entorno
 
-La app **no necesita variables de entorno** ni claves de servicios externos. Solo aplican las estándar del servidor standalone:
+Solo las del Worker de atribución (opcionales: si faltan, la web funciona igual y no se registra la atribución) y las estándar del servidor standalone. En producción van en `/home/deploy/app/.env` (el contenedor lo carga con `env_file`).
 
 | Variable | Uso |
 |---|---|
+| `ATTRIBUTION_WORKER_URL` | Endpoint del Worker de Cloudflare (D1) que guarda la atribución de cotizaciones (`…workers.dev/quote`). |
+| `ATTRIBUTION_WORKER_SECRET` | Clave privada del Worker (cabecera `X-API-Key`). Solo servidor: **nunca** con prefijo `NEXT_PUBLIC_`. |
 | `PORT`, `HOSTNAME` | Puerto e interfaz de `server.js` standalone (en contenedor: `3000` / `0.0.0.0`). |
 | `NODE_ENV` | `production` en el servidor. |
 | `NEXT_TELEMETRY_DISABLED` | Opcional, `1` para desactivar la telemetría de Next. |
@@ -141,7 +147,7 @@ Guía paso a paso para el operador: **`DEPLOY.md`**. Resumen técnico:
 | `.dockerignore` | Excluye `.git`, `node_modules`, `.next`, `.env*`, bases locales, `deploy/`, `docs/`, `*.md`, `upload/`. |
 | `deploy/docker-compose.yml` | Proyecto `anchetasco`: `app` (imagen GHCR, solo `expose: 3000` en la red `web`, `mem_limit 512m`, `NODE_OPTIONS=--max-old-space-size=320`, healthcheck `wget` a `/api`) y `caddy` (`caddy:2`, **único con `ports:`** 80/443/443-udp, `mem_limit 256m`, volúmenes `caddy_data`/`caddy_config`). `restart: unless-stopped` en ambos. |
 | `deploy/Caddyfile` | Snippet `(comun)`: `encode zstd gzip`, cabeceras de seguridad, `reverse_proxy app:3000`. Sitio `anchetasco.com` con HTTPS automático (Let's Encrypt) y HSTS; `www` y el acceso por IP (`:80`) redirigen a `https://anchetasco.com`. |
-| `deploy/.env.example` | Solo `APP_IMAGE`. La app no necesita secretos. |
+| `deploy/.env.example` | `APP_IMAGE` y las variables del Worker de atribución (`ATTRIBUTION_WORKER_URL`, `ATTRIBUTION_WORKER_SECRET`). |
 | `.github/workflows/deploy.yml` | Job `build` (buildx, caché `type=gha`, `linux/amd64`, `GITHUB_TOKEN` para GHCR) y job `deploy` (`ssh`/`scp` nativos con `ssh-keyscan`; sin acciones de terceros para SSH). Secrets: `SSH_HOST`, `SSH_PORT`, `SSH_USER`, `SSH_KEY`. |
 
 Decisiones y reglas:
