@@ -33,7 +33,7 @@ export function Catalog() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6 }}
-          className="mx-auto max-w-2xl text-center"
+          className="mx-auto hidden max-w-2xl text-center sm:block"
         >
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-gold-deep">
             Catálogo
@@ -47,8 +47,8 @@ export function Catalog() {
           </p>
         </motion.div>
 
-        {/* Barra de filtros */}
-        <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-forest/10 bg-white/70 p-4 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
+        {/* Barra de filtros (en móvil va primero: el encabezado se oculta) */}
+        <div className="flex sm:mt-6 flex-col gap-4 rounded-2xl border border-forest/10 bg-white/70 p-4 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
           <p className="text-sm font-semibold text-forest/70" aria-live="polite">
             Mostrando{" "}
             <span className="font-bold text-forest">

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Check, Clock, Minus, Package, Plus, Ruler, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { formatCOP } from "@/lib/catalog-data";
+import { formatCOP, shortDeadline } from "@/lib/catalog-data";
 import type { CatalogProduct } from "@/lib/catalog-data";
 import { MAX_ITEM_QUANTITY, useQuoteStore } from "@/lib/quote-store";
 
@@ -225,8 +225,8 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
             {product.specialOrder && (
               <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-muted-foreground">
                 <Clock className="mt-0.5 h-3 w-3 shrink-0 text-gold-deep" aria-hidden />
-                Sobre pedido: mínimo {product.specialOrder.minUnits} unidades, pedir antes del 1
-                de noviembre.
+                Sobre pedido: mínimo {product.specialOrder.minUnits} unidades, pedir antes del{" "}
+                {shortDeadline(product.specialOrder.deadline)}.
               </p>
             )}
           </div>

@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from "sonner";
-import { FORMATS, PACKS, SPECIAL_PACKS, formatCOP } from "@/lib/catalog-data";
+import { FORMATS, PACKS, SPECIAL_PACKS, formatCOP, shortDeadline } from "@/lib/catalog-data";
 import type { ComboFormat, PackOption } from "@/lib/catalog-data";
 import { useQuoteStore } from "@/lib/quote-store";
 
@@ -167,7 +167,8 @@ export function Configurator() {
                   </div>
                   <p className="flex items-center gap-1.5 text-[11px] text-cream/60">
                     <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                    Sobre pedido · antes del 1 de noviembre · mín. 100 u.
+                    Sobre pedido · antes del {shortDeadline(SPECIAL_PACKS[0].special?.deadline)} ·
+                    mín. {SPECIAL_PACKS[0].special?.minUnits} u.
                   </p>
                 </div>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -302,7 +303,8 @@ export function Configurator() {
                     </p>
                     {selectedPack?.special ? (
                       <p className="text-[10px] font-medium text-gold-deep">
-                        Mín. {selectedPack.special.minUnits} u. · antes del 1 nov
+                        Mín. {selectedPack.special.minUnits} u. · antes del{" "}
+                        {shortDeadline(selectedPack.special.deadline)}
                       </p>
                     ) : (
                       <p className="text-[10px] text-muted-foreground">

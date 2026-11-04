@@ -220,7 +220,7 @@ export function Hero() {
                 size="lg"
                 className="w-full border border-gold/70 bg-gold px-3 py-6 text-sm font-semibold sm:px-8 sm:text-base text-forest-deep shadow-xl shadow-gold/20 transition-all hover:-translate-y-0.5 hover:bg-gold-light sm:w-auto"
               >
-                Explorar el catálogo
+                Ver anchetas
               </Button>
             </a>
             <a href="#cotizar" className="sm:inline-flex">

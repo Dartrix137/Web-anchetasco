@@ -128,7 +128,7 @@ export const PRODUCTS: CatalogProduct[] = [
       "Maní Horneado Manitoba 40 gr",
     ],
     itemsCount: 9,
-    specialOrder: { deadline: "1 de noviembre de 2026", minUnits: 80 },
+    specialOrder: { deadline: "15 de noviembre de 2026", minUnits: 80 },
   },
   {
     id: "zagalillos",
@@ -243,7 +243,7 @@ export const PRODUCTS: CatalogProduct[] = [
       "Paliqueso Horneado 30 gr",
     ],
     itemsCount: 9,
-    specialOrder: { deadline: "1 de noviembre de 2026", minUnits: 80 },
+    specialOrder: { deadline: "15 de noviembre de 2026", minUnits: 80 },
   },
   {
     id: "pastorcitos",
@@ -451,7 +451,7 @@ export const SPECIAL_PACKS: PackOption[] = [
       "Mentas Zero con Stevia 100% Colombina",
       "Mix Cacao de Origen y Pretzels Manitoba",
     ],
-    special: { minUnits: 100, deadline: "1 de noviembre de 2026" },
+    special: { minUnits: 100, deadline: "15 de noviembre de 2026" },
   },
   {
     id: "pack-amazon",
@@ -466,7 +466,7 @@ export const SPECIAL_PACKS: PackOption[] = [
       "Salsa Mayochipotle Amazon 360 ml",
       "Cookies Navidad Premium Tarro 200 gr",
     ],
-    special: { minUnits: 100, deadline: "1 de noviembre de 2026" },
+    special: { minUnits: 100, deadline: "15 de noviembre de 2026" },
   },
   {
     id: "pack-selecto",
@@ -481,7 +481,7 @@ export const SPECIAL_PACKS: PackOption[] = [
       "Arequipe Alpina 220 gr",
       "Café Buendía Tostión Media 340 gr",
     ],
-    special: { minUnits: 100, deadline: "1 de noviembre de 2026" },
+    special: { minUnits: 100, deadline: "15 de noviembre de 2026" },
   },
 ];
 
@@ -536,6 +536,11 @@ export const COMPANY = {
 };
 
 // ---------- UTILIDADES ----------
+/** Fecha límite sin el año: "15 de noviembre de 2026" -> "15 de noviembre". */
+export function shortDeadline(deadline?: string): string {
+  return (deadline ?? "").replace(/ de \d{4}$/, "");
+}
+
 export function formatCOP(value: number): string {
   return new Intl.NumberFormat("es-CO", {
     style: "currency",
@@ -550,7 +555,7 @@ export function priceWithIVA(price: number): number {
 
 // Rangos amigables por presupuesto por regalo: cada uno devuelve 2–3 combos
 export const PRICE_RANGES = [
-  { id: "all", label: "Ver todo el catálogo", min: 0, max: Infinity },
+  { id: "all", label: "Ver todas las anchetas", min: 0, max: Infinity },
   { id: "b1", label: "Hasta $35.000", min: 0, max: 35000 },
   { id: "b2", label: "$35.000 – $75.000", min: 35000, max: 75000 },
   { id: "b3", label: "$75.000 – $100.000", min: 75000, max: 100000 },
