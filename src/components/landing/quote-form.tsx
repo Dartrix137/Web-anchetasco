@@ -191,8 +191,15 @@ export function QuoteForm() {
     const values = form.getValues();
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${buildWhatsAppMessage(values)}`;
 
-    const win = window.open(url, "_blank", "noopener,noreferrer");
-    if (!win) window.location.assign(url);
+    // Sin "noopener" en los features: con él, window.open siempre devuelve null
+    // y no se puede distinguir de un popup bloqueado (abría WhatsApp dos veces).
+    const win = window.open(url, "_blank");
+    if (win) {
+      win.opener = null;
+    } else {
+      // Solo si el navegador bloqueó la ventana nueva
+      window.location.assign(url);
+    }
 
     toast.success("Abriendo WhatsApp…", {
       description: "Tu solicitud queda lista para enviarla a nuestro equipo comercial.",
@@ -699,13 +706,17 @@ function CityChipsInput({
   const [draft, setDraft] = useState("");
   const [showAll, setShowAll] = useState(false);
 
+  // Acepta una o varias ciudades separadas por coma ("Cali, Palmira")
   const addCity = (raw: string) => {
-    const city = raw.trim().replace(/,+$/, "");
-    if (!city) return;
-    const exists = value.some(
-      (c) => c.toLowerCase() === city.toLowerCase()
-    );
-    if (!exists) onChange([...value, city]);
+    const next = [...value];
+    raw
+      .split(",")
+      .map((c) => c.trim())
+      .filter(Boolean)
+      .forEach((city) => {
+        if (!next.some((c) => c.toLowerCase() === city.toLowerCase())) next.push(city);
+      });
+    if (next.length !== value.length) onChange(next);
     setDraft("");
   };
 
@@ -738,6 +749,9 @@ function CityChipsInput({
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
+          // Si el usuario escribe una ciudad y pasa a otro campo (o pulsa
+          // "Enviar") sin presionar Enter, se agrega igual.
+          onBlur={() => addCity(draft)}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === ",") {
               e.preventDefault();
