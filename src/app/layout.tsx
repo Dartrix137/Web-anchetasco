@@ -88,13 +88,16 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <head>
         {/* Consent Mode v2: todo denegado hasta que el visitante acepte el banner.
+            La decisión se lee de localStorage o, si se borró, de la cookie de 12 meses.
             Debe ir ANTES del snippet de GTM. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;
 gtag('consent','default',${JSON.stringify({ ...consentState("denied"), wait_for_update: 500 })});
 gtag('set','ads_data_redaction',true);
-try{if(localStorage.getItem('${CONSENT_STORAGE_KEY}')==='granted')gtag('consent','update',${JSON.stringify(consentState("granted"))});}catch(e){}`,
+var c=null;try{c=localStorage.getItem('${CONSENT_STORAGE_KEY}');}catch(e){}
+if(!c){var m=document.cookie.match(/(?:^|;\\s*)${CONSENT_STORAGE_KEY}=([^;]*)/);c=m&&m[1];}
+if(c==='granted')gtag('consent','update',${JSON.stringify(consentState("granted"))});`,
           }}
         />
         {/* Google Tag Manager */}
